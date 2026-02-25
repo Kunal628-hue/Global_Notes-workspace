@@ -3,8 +3,6 @@
     max-width: 1800px;
     margin: 64px auto 32px;
     padding: 24px var(--spacing-xl);
-    /* Dynamically offset footer for new layout (16px gap + 12px padding) */
-    padding-left: calc(var(--sidebar-width, 240px) + 16px + 12px);
     background: transparent;
     border-top: 1px solid var(--border);
     text-align: center;
@@ -12,6 +10,11 @@
     font-family: var(--font-sans);
     font-size: 13px;
     transition: padding-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Dynamically offset footer ONLY for main page layout with sidebar */
+.layout~.global-footer {
+    padding-left: calc(var(--sidebar-width, 240px) + 16px + 12px);
 }
 
 /* When sidebar is hidden (Mini Sidebar), adjust offset */
