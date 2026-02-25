@@ -608,6 +608,108 @@ body {
   }
 }
 
+/* Premium Custom Selects */
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, var(--surface-2), var(--surface-3));
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-short);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select-trigger:hover {
+  background: var(--surface-3);
+  border-color: var(--border-light);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.custom-select-trigger .chevron {
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+
+.custom-select-trigger.active {
+  background: var(--bg);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.custom-select-trigger.active .chevron {
+  transform: rotate(180deg);
+}
+
+.custom-select-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 140px;
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  padding: 6px;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdown-fade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-select-menu.show {
+  display: flex;
+}
+
+.custom-select-option {
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: all 0.1s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-select-option:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.custom-select-option.selected {
+  background: var(--primary-glow);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.custom-select-option.selected::after {
+  content: "✓";
+  font-size: 11px;
+  margin-left: 8px;
+}
+
 .dropdown-header {
   padding: 8px 16px;
   font-size: 12px;
@@ -2365,28 +2467,78 @@ body[data-theme="corporate-gray"] .editor[data-theme="minimal-white"] {
 .editor-toolbar {
   display: flex;
   align-items: center;
-  gap: 16px;
-  /* Breathable spacing */
-  padding: 6px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-  /* Subtle elevation */
+  justify-content: center;
+  /* Center the middle content */
+  gap: 12px;
+  padding: 8px 16px;
+  padding-right: 52px;
+  /* Reserved space for the fixed toggle button */
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  transition: all var(--transition-short);
+  position: relative;
+  z-index: 10;
+}
+
+
+.toolbar-metadata {
+  display: none;
+  /* Default hidden in expanded mode */
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.metadata-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metadata-divider {
+  opacity: 0.5;
+  color: var(--border-light);
+}
+
+
+.editor-toolbar:hover {
+  border-color: color-mix(in srgb, var(--border) 60%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 
 .toolbar-controls {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1;
   overflow-x: auto;
   min-width: 0;
-  /* Allows horizontal scrolling without pushing parent */
   padding: 4px 0;
   scrollbar-width: none;
-  /* Hide scrollbar for clean look */
+  transition: all var(--transition-fast);
 }
 
 .toolbar-controls::-webkit-scrollbar {
@@ -2396,15 +2548,42 @@ body[data-theme="corporate-gray"] .editor[data-theme="minimal-white"] {
 .toolbar-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
-  padding-right: 16px;
-  border-right: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  padding: 0 4px;
 }
 
-.toolbar-group:last-child {
-  border-right: none;
-  padding-right: 0;
+.editor-toolbar .btn.ghost {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  color: var(--text-dim);
+}
+
+.editor-toolbar .btn.ghost:hover {
+  background-color: var(--surface-3);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.editor-toolbar .btn.ghost:active {
+  transform: scale(0.92);
+}
+
+.toolbar-group+.toolbar-group {
+  position: relative;
+}
+
+.toolbar-group+.toolbar-group::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: color-mix(in srgb, var(--border) 30%, transparent);
 }
 
 /* 
@@ -2415,39 +2594,109 @@ body[data-theme="corporate-gray"] .editor[data-theme="minimal-white"] {
 
 /* Collapsed state */
 .editor-toolbar.collapsed {
-  background: transparent;
-  border-color: transparent;
-  padding: 0;
-  width: fit-content;
-  margin-left: auto;
+  padding: 6px 16px;
+  padding-right: 52px;
+}
+
+.editor-toolbar.collapsed .toolbar-metadata {
+  display: flex;
+  justify-content: center;
 }
 
 .editor-toolbar.collapsed .toolbar-controls {
   display: none;
 }
 
-.editor-toolbar.collapsed #toolbar-toggle {
-  transform: rotate(180deg);
+/* Toggle icon animation */
+.editor-toolbar .toggle-icon {
+  transition: transform var(--transition-short);
+  width: 16px;
+  height: 16px;
+  stroke-width: 3;
+  /* Slightly bolder for premium look */
+  color: var(--text-muted);
 }
+
+.editor-toolbar.collapsed .toggle-icon {
+  transform: rotate(-180deg);
+  color: var(--primary);
+}
+
+/* Premium Toggle Button - Fastened to right corner */
+#toolbar-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: all var(--transition-short);
+  background: var(--surface-2);
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  cursor: pointer;
+  color: var(--text-muted);
+  z-index: 2;
+}
+
+#toolbar-toggle:hover {
+  background: var(--surface-3);
+  color: var(--primary);
+  transform: translateY(-50%) scale(1.1);
+  /* Ensure Y-transform is maintained */
+}
+
 
 .text-size-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 2px;
+  user-select: none;
 }
 
-.content-input {
-  width: 100%;
-  min-height: 45vh;
-  resize: vertical;
-  padding: var(--spacing-lg);
-  border-radius: var(--radius);
+.editor-toolbar .select.tiny {
+  background-color: var(--surface-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0 20px 0 8px;
+  height: 26px;
+  min-width: 60px;
+  font-weight: 500;
+}
+
+.editor-toolbar .select.tiny:hover {
+  background-color: var(--surface-3);
+}
+
+.editor-toolbar .select.tiny:focus {
+  border-color: var(--primary);
+  background-color: var(--bg);
+}
+
+/* Color Picker Tweaks */
+.color-picker-tiny {
+  width: 24px;
+  height: 24px;
+  padding: 0;
   border: 1px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.7;
-  transition: all 150ms ease;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.color-picker-tiny::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker-tiny::-webkit-color-swatch {
+  border: none;
 }
 
 .content-input:focus {
